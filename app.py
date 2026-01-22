@@ -8,16 +8,30 @@ st.set_page_config(
 )
 
 # Custom CSS to force the "Hacker" aesthetic
+# Custom CSS to force the "Hacker" aesthetic and fix readability
 st.markdown("""
     <style>
+    /* Main background and default text color */
     .stApp {
         background-color: #0E1117;
         color: #00FF41;
         font-family: 'Courier New', Courier, monospace;
     }
+
+    /* Force Headlines to be bright green */
     h1, h2, h3 {
         color: #00FF41 !important;
     }
+
+    /* --- THE FIX --- */
+    /* Target all widget labels (above selectboxes, sliders, etc.) and make them white */
+    .stSelectbox label, .stSlider label, .stMultiSelect label, .stRadio label {
+        color: #FFFFFF !important;
+        font-weight: bold;
+    }
+    /* ---------------- */
+
+    /* Button styling */
     .stButton>button {
         background-color: #00FF41;
         color: #000000;
@@ -31,6 +45,8 @@ st.markdown("""
         background-color: #00cc33;
         color: #000000;
     }
+
+    /* Alert box styling */
     .stAlert {
         background-color: #1c2229;
         color: #ffffff;

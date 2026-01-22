@@ -126,15 +126,14 @@ with tab1:
         st.info("💡 We have clients looking for this profile.")
         # REPLACE THIS LINK with your actual Tally form
         st.link_button("JOIN THE BENCH", "https://tally.so/r/yourformid")
-
 # ==========================================
-# TOOL 2: CV OPTIMIZER (Inside Tab 2)
+# TOOL 2: CV OPTIMIZER (PRO EDITION)
 # ==========================================
 with tab2:
-    st.header("Roast My Profile")
-    st.write("Does your CV speak 'Engineer' or 'Consultant'?")
+    st.header("Roast My Profile (CISO Edition)")
+    st.write("Paste your CV bullet points. We check for Impact, Tech, and Compliance.")
     
-    text_input = st.text_area("Paste your LinkedIn 'About' or CV bullets:", height=150)
+    text_input = st.text_area("Paste Text Here:", height=200, placeholder="Example: Led NIS2 audit for fintech client, reducing risk by 40%...")
 
     if st.button("ANALYZE TEXT", key="cv_btn"):
         if not text_input:
@@ -142,28 +141,68 @@ with tab2:
         else:
             score = 0
             feedback = []
+            text_lower = text_input.lower()
             
-            # Logic
-            if re.search(r"(\$|€|%|budget|saved|ROI)", text_input, re.IGNORECASE):
-                score += 30
-                feedback.append("✅ **Business Impact:** Good usage of money metrics.")
+            # 1. IMPACT ANALYSIS (Contextual)
+            # We look for numbers NEAR impact words, not just random % signs.
+            impact_pattern = r"(\d+(?:%|k|m|bn)|€\$?\d+)" # Finds 40%, 100k, €500
+            if re.search(impact_pattern, text_lower):
+                score += 25
+                feedback.append("✅ **Business Impact:** Good. You are using numbers/metrics.")
             else:
-                feedback.append("❌ **Business Impact:** No money found. Add € or %.")
+                feedback.append("❌ **Business Impact:** You sound like a 'Doer' not an 'Achiever'. Add metrics (e.g., 'Reduced scan time by 40%').")
 
-            if re.search(r"(nis2|dora|iso|compliance|audit)", text_input.lower()):
-                score += 40
-                feedback.append("✅ **Regulation:** Strong compliance keywords.")
+            # 2. COMPLIANCE CHECK (The Money Keywords)
+            compliance_stack = ["nis2", "dora", "gdpr", "iso 27001", "tisax", "soc2", "cra"]
+            found_comp = [kw for kw in compliance_stack if kw in text_lower]
+            if found_comp:
+                score += 25
+                feedback.append(f"✅ **Regulation:** Strong. Found: {', '.join(found_comp).upper()}.")
             else:
-                feedback.append("❌ **Regulation:** Missing NIS2/DORA keywords.")
+                feedback.append("❌ **Regulation:** Major Red Flag. You must mention specific frameworks (NIS2, DORA) to get hired in EU.")
 
-            if len(text_input.split()) < 20:
-                feedback.append("⚠️ **Length:** Too short.")
+            # 3. TECH STACK CHECK (New!)
+            tech_stack = ["burp", "nessus", "splunk", "sentinel", "kubernetes", "docker", "python", "bash", "wireshark"]
+            found_tech = [kw for kw in tech_stack if kw in text_lower]
+            if len(found_tech) >= 2:
+                score += 20
+                feedback.append(f"✅ **Tech Stack:** Solid. You mentioned: {', '.join(found_tech).title()}.")
             else:
-                score += 30
+                feedback.append("⚠️ **Tech Stack:** Light. Mention specific tools (e.g., Burp Suite, Splunk) to prove hands-on skills.")
 
-            st.metric("Hirability Score", f"{score}/100")
-            for f in feedback:
-                st.write(f)
+            # 4. "PASSIVE" VOICE DETECTOR
+            passive_words = ["helped", "assisted", "worked on", "responsible for"]
+            found_passive = [kw for kw in passive_words if kw in text_lower]
+            if found_passive:
+                score -= 10
+                feedback.append(f"⚠️ **Weak Language:** Stop using '{found_passive[0]}'. Use 'Orchestrated', 'Deployed', or 'Secured'.")
+            else:
+                score += 15
+                feedback.append("✅ **Tone:** Strong, active leadership voice.")
+
+            # 5. LENGTH CHECK
+            word_count = len(text_input.split())
+            if 30 <= word_count <= 400:
+                score += 15
+            else:
+                feedback.append("⚠️ **Length:** Keep it between 30-400 words for a LinkedIn summary.")
+
+            # SCORING MATH
+            score = max(0, min(100, score)) # Cap at 0-100
+
+            # DISPLAY
+            col1, col2 = st.columns([1,2])
+            with col1:
+                st.metric("Hirability Score", f"{score}/100")
+                if score > 80: st.success("VERDICT: ELITE")
+                elif score > 50: st.warning("VERDICT: MID")
+                else: st.error("VERDICT: WEAK")
             
-            # REPLACE THIS LINK with your actual Tally form
-            st.link_button("GET A REWRITE (JOIN BENCH)", "https://tally.so/r/yourformid")
+            with col2:
+                for f in feedback:
+                    st.write(f)
+
+            st.markdown("---")
+            st.info("💡 **Pro Tip:** German clients pay +20% for 'DORA' experience. Add it if you have it.")
+            st.link_button("GET A PROFESSIONAL REWRITE", "https://tally.so/r/yourformid")
+

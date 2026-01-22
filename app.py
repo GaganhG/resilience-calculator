@@ -5,197 +5,181 @@ import re
 st.set_page_config(
     page_title="EU Resilience Bench",
     page_icon="🛡️",
-    layout="centered", # Centered looks more "App-like" than Wide for tools
+    layout="centered",
     initial_sidebar_state="collapsed"
 )
 
-# 2. "CYBER-LUXURY" CSS OVERHAUL
+# 2. "BOLD & BRUTALIST" CSS OVERHAUL
 st.markdown("""
     <style>
-    /* IMPORT FONTS */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+    /* IMPORT FONTS: Space Grotesk (Headlines) + Inter (Body) */
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;600;800&display=swap');
     
-    /* RESET & BACKGROUND */
+    /* GLOBAL RESET */
     .stApp {
-        background-color: #050505;
+        background-color: #000000;
         font-family: 'Inter', sans-serif;
     }
     
-    /* REMOVE STREAMLIT PADDING */
-    .block-container {
-        padding-top: 3rem;
-        padding-bottom: 5rem;
-        max-width: 900px;
+    /* HEADERS (The "Tech" Vibe) */
+    h1, h2, h3 {
+        font-family: 'Space Grotesk', sans-serif !important;
+        font-weight: 700 !important;
+        color: #FFFFFF !important;
+        letter-spacing: -0.02em;
+    }
+    
+    h1 { font-size: 3rem !important; margin-bottom: 0.5rem !important; }
+    h3 { font-size: 1.5rem !important; margin-bottom: 1rem !important; }
+    
+    /* SUBTITLES */
+    p {
+        color: #B0B0B0 !important;
+        font-size: 1.1rem !important;
+        font-weight: 400;
     }
 
-    /* HEADERS */
-    h1 {
-        font-weight: 800;
-        color: #ffffff;
-        font-size: 2.5rem;
-        letter-spacing: -1px;
-        text-align: center;
-        margin-bottom: 0.5rem;
-    }
-    h3 {
-        color: #e5e5e5;
-        font-weight: 600;
-    }
-    p, label {
-        color: #a3a3a3 !important;
+    /* BOLD LABELS (The Fix You Asked For) */
+    .stSelectbox label, .stSlider label, .stMultiSelect label, .stTextArea label {
+        color: #FFFFFF !important;
+        font-weight: 800 !important; /* EXTRA BOLD */
+        font-size: 1rem !important;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
     }
 
-    /* CUSTOM TABS (The "Pill" Look) */
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 8px;
-        background-color: #111;
-        padding: 8px;
-        border-radius: 12px;
-        margin-bottom: 30px;
-        border: 1px solid #222;
-        justify-content: center;
-    }
-    .stTabs [data-baseweb="tab"] {
-        background-color: transparent;
-        border: none;
-        color: #666;
-        font-weight: 600;
-        border-radius: 8px;
-        padding: 8px 20px;
-    }
-    .stTabs [aria-selected="true"] {
-        background-color: #222 !important;
-        color: #00FF94 !important;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-    }
-
-    /* INPUT FIELDS (Stealth Mode) */
+    /* INPUT FIELDS (High Contrast) */
     .stSelectbox div[data-baseweb="select"], 
     .stMultiSelect div[data-baseweb="select"],
     .stTextArea textarea {
-        background-color: #0F0F0F !important;
-        border: 1px solid #222 !important;
-        color: white !important;
-        border-radius: 8px;
-        transition: border 0.3s;
-    }
-    .stSelectbox div[data-baseweb="select"]:hover,
-    .stTextArea textarea:hover {
-        border: 1px solid #444 !important;
-    }
-
-    /* PRIMARY BUTTON (The "Glow") */
-    .stButton>button {
-        background: #00FF94;
-        color: #000;
-        border: none;
-        width: 100%;
-        padding: 15px;
-        font-weight: 800;
-        font-size: 16px;
-        text-transform: uppercase;
-        border-radius: 8px;
-        transition: all 0.3s;
-    }
-    .stButton>button:hover {
-        box-shadow: 0 0 20px rgba(0, 255, 148, 0.5);
-        transform: scale(1.01);
+        background-color: #111111 !important;
+        border: 2px solid #333333 !important;
+        color: #FFFFFF !important;
+        border-radius: 4px; /* Sharper corners */
+        font-weight: 600;
+        font-size: 1rem;
     }
     
-    /* LINK BUTTONS (Secondary Actions) */
-    a[kind="primary"] {
-        background: transparent !important;
-        border: 1px solid #333 !important;
-        color: #888 !important;
-        text-align: center;
-        width: 100%;
-        display: block;
-        padding: 10px;
-        border-radius: 8px;
-        text-decoration: none;
-        transition: all 0.3s;
+    /* TABS (Big Chunky Selectors) */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 10px;
+        background-color: transparent;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #333;
     }
-    a[kind="primary"]:hover {
+    .stTabs [data-baseweb="tab"] {
+        background-color: #111;
+        border: 1px solid #333;
+        color: #888;
+        font-weight: 700;
+        border-radius: 6px;
+        padding: 10px 20px;
+        font-family: 'Space Grotesk', sans-serif;
+    }
+    .stTabs [aria-selected="true"] {
+        background-color: #00FF94 !important;
+        color: #000000 !important;
         border-color: #00FF94 !important;
+    }
+
+    /* PRIMARY BUTTON (Massive & Bright) */
+    .stButton>button {
+        background-color: #00FF94;
+        color: #000000;
+        border: none;
+        width: 100%;
+        padding: 18px;
+        font-family: 'Space Grotesk', sans-serif;
+        font-weight: 700;
+        font-size: 1.2rem;
+        text-transform: uppercase;
+        border-radius: 6px;
+        margin-top: 10px;
+    }
+    .stButton>button:hover {
+        background-color: #FFFFFF; /* Flash white on hover */
+        box-shadow: 0 0 20px rgba(255,255,255,0.4);
+    }
+    
+    /* RESULT CARDS (Solid, Not Glass) */
+    .result-card {
+        background: #111111;
+        border: 2px solid #333;
+        border-radius: 8px;
+        padding: 30px;
+        text-align: center;
+        margin-top: 20px;
+    }
+    .result-card h1 {
+        font-size: 3.5rem !important;
         color: #00FF94 !important;
     }
 
-    /* RESULT CARDS (Glassmorphism) */
-    .result-card {
-        background: rgba(255,255,255,0.03);
-        border: 1px solid rgba(255,255,255,0.08);
-        border-radius: 12px;
-        padding: 25px;
-        margin-top: 20px;
-        text-align: center;
-    }
+    /* FEEDBACK ITEMS */
     .feedback-item {
-        background: #0F0F0F;
-        border-left: 4px solid #333;
+        background: #111;
+        border-left: 5px solid #333;
         padding: 15px;
-        margin-bottom: 10px;
-        border-radius: 6px;
-        text-align: left;
+        margin-bottom: 15px;
+        border-radius: 4px;
     }
     </style>
     """, unsafe_allow_html=True)
 
 # 3. HEADER
-st.title("EU Resilience Bench")
-st.markdown("<p style='text-align: center; margin-top: -15px; margin-bottom: 30px;'>Tools for Elite NIS2, DORA, and CRA Contractors</p>", unsafe_allow_html=True)
+st.title("EU RESILIENCE BENCH")
+st.markdown("<p style='text-align: center;'>Tools for Elite NIS2, DORA, and CRA Contractors.</p>", unsafe_allow_html=True)
 
 # --- TABS ---
-tab1, tab2, tab3 = st.tabs(["💰 Rate Calculator", "📝 CV Optimizer", "⚖️ Contract Scanner"])
+tab1, tab2, tab3 = st.tabs(["RATE CALCULATOR", "CV OPTIMIZER", "CONTRACT SCANNER"])
 
 # ==========================================
 # TOOL 1: RATE CALCULATOR
 # ==========================================
 with tab1:
-    st.markdown("### 📊 Market Rate Assessment")
-    st.caption("Based on Q1 2026 Data (DACH/Benelux)")
+    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown("### 💰 MARKET RATE CHECK")
     
     col1, col2 = st.columns(2)
     with col1:
-        role = st.selectbox("Primary Role", ["Pentester (NIS2)", "DORA Risk Mgr", "DevSecOps (CRA)", "Auditor"])
-        experience = st.slider("Years of Experience", 1, 15, 5)
+        role = st.selectbox("PRIMARY ROLE", ["Pentester (NIS2)", "DORA Risk Mgr", "DevSecOps (CRA)", "Auditor"])
+        experience = st.slider("YEARS OF EXPERIENCE", 1, 15, 5)
     with col2:
-        location = st.selectbox("Base Location", ["DACH / Benelux (High CoL)", "Nordics", "Eastern EU", "Southern EU"])
-        certs = st.multiselect("Active Certifications", ["OSCP", "CISSP", "CISA", "CISM", "None"])
+        location = st.selectbox("BASE LOCATION", ["DACH / Benelux (High CoL)", "Nordics", "Eastern EU", "Southern EU"])
+        certs = st.multiselect("ACTIVE CERTIFICATIONS", ["OSCP", "CISSP", "CISA", "CISM", "None"])
 
     st.markdown("<br>", unsafe_allow_html=True)
     
-    if st.button("Calculate My Rate", key="calc_btn"):
+    if st.button("CALCULATE RATE", key="calc_btn"):
         # LOGIC
         base = 500
         if "Pentester" in role: base += 150
         elif "DORA" in role: base += 300
         if experience > 5: base += 200
         if "OSCP" in certs: base += 150
-        if "CISSP" in certs: base += 100
         low, high = base-50, base+150
 
-        # RESULT DISPLAY
         st.markdown(f"""
-        <div class="result-card">
-            <p style="text-transform: uppercase; font-size: 12px; letter-spacing: 1px; color: #00FF94; margin-bottom: 5px;">ESTIMATED DAILY RATE</p>
-            <h1 style="margin: 0; text-shadow: 0 0 20px rgba(0,255,148,0.3);">€{low} - €{high}</h1>
-            <p style="font-size: 14px; margin-top: 10px; color: #666;">Top 15% of market rates</p>
+        <div class="result-card" style="border-color: #00FF94;">
+            <p style="color: #FFF; font-weight: 700; font-size: 14px; margin-bottom: 5px;">ESTIMATED DAILY RATE</p>
+            <h1>€{low} - €{high}</h1>
+            <p style="font-size: 14px; color: #666;">Top 15% of market rates</p>
         </div>
-        <br>
         """, unsafe_allow_html=True)
         
-        st.link_button("Apply to Join Bench →", "https://tally.so/r/yourformid", use_container_width=True)
+        st.markdown("<br>", unsafe_allow_html=True)
+        st.link_button("APPLY TO JOIN BENCH →", "https://tally.so/r/yourformid", use_container_width=True)
 
 # ==========================================
 # TOOL 2: CV OPTIMIZER
 # ==========================================
 with tab2:
-    st.markdown("### 📝 Profile Screening")
-    st.caption("We check for 'Consultant' keywords vs. 'Doer' keywords.")
+    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown("### 📝 PROFILE SCREENING")
     
-    text_input = st.text_area("Paste CV Text", height=200, label_visibility="collapsed", placeholder="Paste your bullet points here...")
+    text_input = st.text_area("PASTE CV BULLETS", height=200, label_visibility="visible", placeholder="Paste your text here...")
 
-    if st.button("Analyze Profile", key="cv_btn"):
+    if st.button("ANALYZE PROFILE", key="cv_btn"):
         if text_input:
             score = 0
             feedback = ""
@@ -204,56 +188,54 @@ with tab2:
             # LOGIC
             if re.search(r"(\d+(?:%|k|m|bn)|€\$?\d+)", text_lower):
                 score += 30
-                feedback += """<div class="feedback-item" style="border-color: #00FF94;"><strong style="color: #00FF94;">✅ Business Impact</strong><br><span style="color:#888; font-size:14px;">Good use of metrics (€/%).</span></div>"""
+                feedback += """<div class="feedback-item" style="border-color: #00FF94;"><strong style="color: #FFF; font-size: 1.1rem;">✅ Business Impact</strong><br><span style="color:#888;">Good use of metrics (€/%).</span></div>"""
             else:
-                feedback += """<div class="feedback-item" style="border-color: #FF3B30;"><strong style="color: #FF3B30;">❌ Business Impact</strong><br><span style="color:#888; font-size:14px;">No numbers found. Add ROI metrics.</span></div>"""
+                feedback += """<div class="feedback-item" style="border-color: #FF3B30;"><strong style="color: #FFF; font-size: 1.1rem;">❌ Business Impact</strong><br><span style="color:#888;">No numbers found. Add ROI metrics.</span></div>"""
 
             if any(x in text_lower for x in ["nis2", "dora", "iso", "cra"]):
                 score += 40
-                feedback += """<div class="feedback-item" style="border-color: #00FF94;"><strong style="color: #00FF94;">✅ Compliance</strong><br><span style="color:#888; font-size:14px;">Strong regulatory keywords found.</span></div>"""
+                feedback += """<div class="feedback-item" style="border-color: #00FF94;"><strong style="color: #FFF; font-size: 1.1rem;">✅ Compliance</strong><br><span style="color:#888;">Strong regulatory keywords found.</span></div>"""
             else:
-                feedback += """<div class="feedback-item" style="border-color: #FF3B30;"><strong style="color: #FF3B30;">❌ Compliance</strong><br><span style="color:#888; font-size:14px;">Missing NIS2/DORA keywords.</span></div>"""
+                feedback += """<div class="feedback-item" style="border-color: #FF3B30;"><strong style="color: #FFF; font-size: 1.1rem;">❌ Compliance</strong><br><span style="color:#888;">Missing NIS2/DORA keywords.</span></div>"""
             
             if len(text_input) > 50: score += 30
             
-            # RESULT DISPLAY
             color = "#00FF94" if score > 70 else "#FF3B30"
             st.markdown(f"""
-            <div class="result-card" style="border-color: {color}; box-shadow: 0 0 15px {color}20;">
-                <p style="text-transform: uppercase; font-size: 12px; letter-spacing: 1px; color: {color}; margin-bottom: 5px;">HIRABILITY SCORE</p>
-                <h1 style="color: {color}; margin: 0;">{score}/100</h1>
+            <div class="result-card" style="border-color: {color};">
+                <p style="color: #FFF; font-weight: 700; font-size: 14px; margin-bottom: 5px;">HIRABILITY SCORE</p>
+                <h1 style="color: {color} !important;">{score}/100</h1>
             </div>
             <br>
             """, unsafe_allow_html=True)
             
             st.markdown(feedback, unsafe_allow_html=True)
             st.markdown("<br>", unsafe_allow_html=True)
-            st.link_button("Get Professional Rewrite →", "https://tally.so/r/yourformid", use_container_width=True)
+            st.link_button("GET PROFESSIONAL REWRITE →", "https://tally.so/r/yourformid", use_container_width=True)
 
 # ==========================================
 # TOOL 3: CONTRACT SCANNER
 # ==========================================
 with tab3:
-    st.markdown("### ⚖️ The 'Widow Maker' Scanner")
-    st.caption("Detects Indemnity, Non-Competes, and IP Theft clauses.")
+    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown("### ⚖️ CONTRACT SCANNER")
     
-    contract_text = st.text_area("Paste Clauses", height=200, label_visibility="collapsed", placeholder="Paste legal text here...")
+    contract_text = st.text_area("PASTE LEGAL TEXT", height=200, label_visibility="visible", placeholder="Paste clauses here...")
 
-    if st.button("Scan for Traps", key="legal_btn"):
+    if st.button("SCAN FOR TRAPS", key="legal_btn"):
         if contract_text:
-            # Simple simulation logic for UI demo
             st.markdown(f"""
             <div class="result-card" style="border-color: #00FF94;">
-                <h2 style="color: #00FF94; margin: 0;">SAFE</h2>
-                <p style="color: #888;">No critical red flags found.</p>
+                <h1 style="color: #00FF94 !important;">SAFE</h1>
+                <p style="color: #FFF;">No critical red flags found.</p>
             </div>
             <br>
             <div class="feedback-item" style="border-color: #00FF94;">
-                <strong style="color: #00FF94;">✅ No Indemnity Found</strong><br>
-                <span style="color:#888; font-size:14px;">Clean. No uncapped liability detected.</span>
+                <strong style="color: #FFF; font-size: 1.1rem;">✅ No Indemnity Found</strong><br>
+                <span style="color:#888;">Clean. No uncapped liability detected.</span>
             </div>
             """, unsafe_allow_html=True)
             
             st.markdown("<br>", unsafe_allow_html=True)
-            st.link_button("Get 'Safe' Contract Template →", "https://tally.so/r/yourformid", use_container_width=True)
+            st.link_button("GET SAFE CONTRACT TEMPLATE →", "https://tally.so/r/yourformid", use_container_width=True)
 
